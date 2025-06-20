@@ -5,6 +5,7 @@ A complete monitoring solution using Prometheus and Grafana deployed on AWS EC2 
 ## Architecture Overview
 
 This project sets up a monitoring stack consisting of:
+
 - **Prometheus**: Metrics collection and storage
 - **Node Exporter**: System metrics exporter
 - **Grafana**: Visualization and dashboards
@@ -36,6 +37,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 ### 2. Security Group Configuration
 
 Open these ports in your EC2 security group:
+
 - **3000**: Grafana web interface
 - **9090**: Prometheus web interface
 - **9100**: Node Exporter metrics
@@ -49,10 +51,10 @@ Open these ports in your EC2 security group:
 cd Guided-Monitoring-Lab
 
 # Start all services
-docker-compose up -d
+docker compose up -d
 
 # Verify containers are running
-docker-compose ps
+docker- compose ps
 ```
 
 ## Access URLs
@@ -87,13 +89,17 @@ docker-compose ps
 Guided-Monitoring-Lab/
 ├── compose.yml          # Docker Compose configuration
 ├── prometheus.yml       # Prometheus scrape configuration
+├── alertmanager.yml     # Alert notification routing
+├── alert-rules.yml      # Alert conditions and thresholds
 ├── README.md           # This file
+├── ALERTING.md         # Detailed alerting documentation
 └── Screenshots/        # Dashboard screenshots
 ```
 
 ## Monitoring Metrics
 
 The setup monitors:
+
 - CPU usage and load
 - Memory utilization
 - Disk space and I/O
@@ -104,44 +110,55 @@ The setup monitors:
 
 ```bash
 # Check container logs
-docker-compose logs prometheus
-docker-compose logs grafana
-docker-compose logs node-exporter
+docker compose logs prometheus
+docker compose logs grafana
+docker compose logs node-exporter
 
 # Restart services
-docker-compose restart
+docker compose restart
 
 # Stop all services
-docker-compose down
+docker compose down
 ```
 
-## Slack & Email Alerts Setup
+## Alerting System
 
-### 1. Slack Integration
-1. Create Slack webhook: https://api.slack.com/messaging/webhooks
-2. Update `alertmanager.yml` with your webhook URL
-3. Set channel name (e.g., #alerts)
+This project includes a complete alerting system with Slack and Email notifications.
 
-### 2. Email Integration
-1. Use Gmail app password or SMTP server
-2. Update `alertmanager.yml` with SMTP details and credentials
+### Quick Setup
 
-### 3. Deploy with Alerts
+1. Add port 9093 to EC2 security group
+2. Configure Slack webhook in `alertmanager.yml`
+3. Set Gmail app password in `alertmanager.yml`
+4. Deploy: `docker-compose up -d`
+
+### Alert Conditions
+
+- CPU > 80% for 2 minutes
+- Memory > 85% for 2 minutes
+- Disk > 90% for 1 minute
+
+### Access Points
+
+- Alertmanager: `http://<EC2-IP>:9093`
+- Prometheus Alerts: `http://<EC2-IP>:9090/alerts`
+
+### Testing
+
 ```bash
-docker-compose down
-docker-compose up -d
+# CPU stress test
+sudo apt install stress -y
+stress --cpu 4 --timeout 300
 ```
 
-### 4. Access Alertmanager
-- URL: `http://<EC2-IP>:9093`
-- Port 9093 must be open in security group
+**For detailed alerting setup and configuration, see [ALERTING.md](ALERTING.md)**
 
 ## Cleanup
 
 ```bash
 # Remove containers and networks
-docker-compose down
+docker compose down
 
 # Remove volumes (data will be lost)
-docker-compose down -v
+docker compose down -v
 ```
