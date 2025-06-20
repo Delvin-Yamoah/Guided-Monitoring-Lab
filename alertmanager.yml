@@ -1,35 +1,23 @@
 global:
   smtp_smarthost: "smtp.gmail.com:587"
-  smtp_from: "yamoahdelvin@gmail.com"
-  smtp_auth_username: "yamoahdelvin@gmail.com"
-  smtp_auth_password: "hkxz eeza jujn bhpa"
+  smtp_from: "your-email"
+  smtp_auth_username: "your-email"
+  smtp_auth_password: "gmailAppPassword"
 
 route:
   group_by: ["alertname"]
   group_wait: 10s
   group_interval: 10s
   repeat_interval: 1h
-  receiver: "web.hook"
+  receiver: "alerts"
 
 receivers:
-  - name: "web.hook"
+  - name: "alerts"
     email_configs:
-      - to: "yamoahdelvin@gmail.com"
-        subject: "Alert: {{ .GroupLabels.alertname }}"
-        body: |
-          {{ range .Alerts }}
-          Alert: {{ .Annotations.summary }}
-          Description: {{ .Annotations.description }}
-          {{ end }}
-
+      - to: "your-email"
     slack_configs:
-      - api_url: "https://hooks.slack.com/services/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"
-        channel: "#alerts"
-        title: "Alert: {{ .GroupLabels.alertname }}"
-        text: |
-          {{ range .Alerts }}
-          {{ .Annotations.summary }}
-          {{ end }}
+      - api_url: "yourSlackApiUrl"
+        channel: "#yourSlackChannel"
 
 inhibit_rules:
   - source_match:
