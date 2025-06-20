@@ -1,8 +1,8 @@
 global:
   smtp_smarthost: "smtp.gmail.com:587"
-  smtp_from: "delvin.yamoah@amalitechtraining.org"
-  smtp_auth_username: "your-email@gmail.com"
-  smtp_auth_password: "your-app-password"
+  smtp_from: "yamoahdelvin@gmail.com"
+  smtp_auth_username: "yamoahdelvin@gmail.com"
+  smtp_auth_password: "hkxz eeza jujn bhpa"
 
 route:
   group_by: ["alertname"]
